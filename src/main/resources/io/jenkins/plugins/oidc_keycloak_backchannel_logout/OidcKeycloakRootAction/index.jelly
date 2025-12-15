@@ -1,4 +1,0 @@
-<?jelly escape-by-default='true'?>
-<div>
-    OIDC Endpoint is Active.
-</div>
