@@ -1,4 +1,3 @@
-
 # OIDC Backchannel Logout Plugin
 
 A Jenkins plugin that implements **OIDC Backchannel Logout** support for any compliant OpenID Connect (OIDC) Identity Provider.
@@ -46,6 +45,11 @@ You need to configure your OIDC Identity Provider to send backchannel logout req
 ## 🛠️ Demo
 *This demo below uses Keycloak as an example OIDC Identity Provider.*
 ![Demo](/docs/images/demo.gif)
+
+## ⚠️ Limitations
+
+**SessionTracker is in-memory only:**
+This plugin uses an in-memory map to track the relationship between OIDC session IDs (`sid`) and Jenkins HTTP sessions. As a result, it does **not** support High Availability (HA) or clustered Jenkins environments (such as CloudBees CI HA) where multiple controller instances are used. Session mappings will not be shared across nodes, so backchannel logout may not work reliably in these scenarios.
 
 ## 🤝 Contributing
 
