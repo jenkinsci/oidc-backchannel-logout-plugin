@@ -1,0 +1,8 @@
+<?jelly escape-by-default='true'?>
+<div>
+    This plugin extends the oic-auth plugin to support OIDC Backchannel Logout.
+    <br/>
+    Developed by O. Midiyanto.
+    <br/>
+    <strong>Note:</strong> This plugin requires <a href="https://plugins.jenkins.io/oic-auth/">oic-auth</a> as the core dependency.
+</div>

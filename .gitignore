@@ -1,0 +1,7 @@
+target/
+work/
+.idea/
+*.iml
+*.hpi
+.DS_Store
+release.properties
