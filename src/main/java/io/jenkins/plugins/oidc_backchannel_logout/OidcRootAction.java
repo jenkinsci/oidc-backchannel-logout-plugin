@@ -66,7 +66,7 @@ public class OidcRootAction implements UnprotectedRootAction {
 
     @RequirePOST
     private void doBackchannelLogout(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
-        LOGGER.info("Received Backchannel Logout Request");
+        LOGGER.fine("Received Backchannel Logout Request");
         String logoutToken = req.getParameter("logout_token");
 
         if (logoutToken == null) {
