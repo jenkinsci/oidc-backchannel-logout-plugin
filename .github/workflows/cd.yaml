@@ -21,9 +21,6 @@ on:
   # the following check_run trigger lines should all be commented.
   # Note: Consider the use case #2 config for 'validate_only' below
   #       as an alternative option!
-  push:
-    tags:
-      - '*'
   check_run:
     types:
       - completed
