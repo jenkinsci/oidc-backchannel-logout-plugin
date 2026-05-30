@@ -18,6 +18,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.util.DefaultResourceRetriever;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jose.proc.JWSVerificationKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -42,6 +43,12 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 public class OidcRootAction implements UnprotectedRootAction {
 
     private static final Logger LOGGER = Logger.getLogger(OidcRootAction.class.getName());
+
+    // Nimbus defaults to 500ms connect/read timeouts, which is too tight for IdPs
+    // whose JWKS endpoint responds slowly (e.g. Authentik/Keycloak behind latency,
+    // container cold starts). 10s fails fast on real outages while tolerating slow IdPs.
+    private static final int JWKS_CONNECT_TIMEOUT_MS = 10_000;
+    private static final int JWKS_READ_TIMEOUT_MS = 10_000;
 
     @Override
     public String getIconFileName() { return null; }
@@ -95,7 +102,12 @@ public class OidcRootAction implements UnprotectedRootAction {
             ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
             jwtProcessor.setJWSTypeVerifier(new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("logout+jwt")));
 
-            JWKSource<SecurityContext> keySource = new RemoteJWKSet<>(new URL(jwksUri));
+            // Configure resource retriever with longer timeouts for slow JWKS endpoints
+            DefaultResourceRetriever resourceRetriever = new DefaultResourceRetriever(
+                JWKS_CONNECT_TIMEOUT_MS,
+                JWKS_READ_TIMEOUT_MS
+            );
+            JWKSource<SecurityContext> keySource = new RemoteJWKSet<>(new URL(jwksUri), resourceRetriever);
             JWSAlgorithm expectedJWSAlg = JWSAlgorithm.RS256;
             JWSKeySelector<SecurityContext> keySelector = new JWSVerificationKeySelector<>(expectedJWSAlg, keySource);
             jwtProcessor.setJWSKeySelector(keySelector);
