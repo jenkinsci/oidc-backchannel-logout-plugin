@@ -4,6 +4,18 @@ A Jenkins plugin that implements **OIDC Backchannel Logout** support for any com
 
 This plugin bridges the gap between your OIDC Identity Provider and Jenkins by ensuring that when a user logs out from the IdP (or when their session is terminated via the IdP's admin console), their session in Jenkins is immediately invalidated.
 
+> [!WARNING]
+> **Breaking change: the backchannel logout endpoint URL has changed.**
+>
+> The plugin previously registered itself under the `/oidc` path, which conflicted with the [`oidc-provider`](https://plugins.jenkins.io/oidc-provider/) plugin (both claimed `/oidc/*`, making one of them unreachable). To allow both plugins to coexist, this plugin now uses a dedicated, namespaced path.
+>
+> | | URL |
+> |---|---|
+> | **Before** | `https://<YOUR_JENKINS_URL>/oidc/backchannel-logout` |
+> | **After**  | `https://<YOUR_JENKINS_URL>/oidc-backchannel-logout` |
+>
+> **Action required:** after upgrading, update the **Backchannel Logout URL** in your Identity Provider's client/application configuration to the new path. If you skip this step, the IdP will keep calling the old URL, receive a `404`, and logout will silently fail (sessions stay active).
+
 ## 🚀 Features
 
 * **Session Mapping:** Automatically tracks the relationship between OIDC Session IDs (`sid`) and Jenkins HTTP Sessions upon login.
@@ -27,7 +39,7 @@ You need to configure your OIDC Identity Provider to send backchannel logout req
 3.  Locate the **Backchannel Logout URL** or equivalent field.
 4.  Enter the URL in the following format:
     ```
-    https://<YOUR_JENKINS_URL>/oidc/backchannel-logout
+    https://<YOUR_JENKINS_URL>/oidc-backchannel-logout
     ```
 5.  Save the configuration.
 
