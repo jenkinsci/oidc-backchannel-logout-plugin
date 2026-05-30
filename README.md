@@ -12,7 +12,7 @@ This plugin bridges the gap between your OIDC Identity Provider and Jenkins by e
 > | | URL |
 > |---|---|
 > | **Before** | `https://<YOUR_JENKINS_URL>/oidc/backchannel-logout` |
-> | **After**  | `https://<YOUR_JENKINS_URL>/oidc-backchannel-logout` |
+> | **After**  | `https://<YOUR_JENKINS_URL>/oidc-backchannel/logout` |
 >
 > **Action required:** after upgrading, update the **Backchannel Logout URL** in your Identity Provider's client/application configuration to the new path. If you skip this step, the IdP will keep calling the old URL, receive a `404`, and logout will silently fail (sessions stay active).
 
@@ -39,7 +39,7 @@ You need to configure your OIDC Identity Provider to send backchannel logout req
 3.  Locate the **Backchannel Logout URL** or equivalent field.
 4.  Enter the URL in the following format:
     ```
-    https://<YOUR_JENKINS_URL>/oidc-backchannel-logout
+    https://<YOUR_JENKINS_URL>/oidc-backchannel/logout
     ```
 5.  Save the configuration.
 

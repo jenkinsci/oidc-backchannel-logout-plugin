@@ -13,7 +13,7 @@ public class OidcCrumbExclusion extends CrumbExclusion {
     @Override
     public boolean process(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
         String pathInfo = req.getPathInfo();
-        if (pathInfo != null && (pathInfo.equals("/oidc-backchannel-logout") || pathInfo.equals("/oidc-backchannel-logout/"))) {
+        if (pathInfo != null && (pathInfo.equals("/oidc-backchannel/logout") || pathInfo.equals("/oidc-backchannel/logout/"))) {
             chain.doFilter(req, resp);
             return true;
         }

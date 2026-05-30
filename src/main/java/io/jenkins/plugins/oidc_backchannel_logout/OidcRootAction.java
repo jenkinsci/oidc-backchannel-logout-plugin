@@ -57,12 +57,22 @@ public class OidcRootAction implements UnprotectedRootAction {
     public String getDisplayName() { return null; }
 
     @Override
-    public String getUrlName() { return "oidc-backchannel-logout"; }
+    public String getUrlName() { return "oidc-backchannel"; }
 
     @RequirePOST
     @SuppressFBWarnings(value = "LSC_PERMISSION_CHECK", justification = "Public endpoint for OIDC Backchannel Logout. Authenticity is validated via JWT signature verification.")
     // lgtm[jenkins/no-permission-check]
-    public void doIndex(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
+    public void doDynamic(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
+        String path = req.getRestOfPath();
+        if ("/logout".equals(path) || "/logout/".equals(path)) {
+            doBackchannelLogout(req, rsp);
+        } else {
+            rsp.sendError(404);
+        }
+    }
+
+    @RequirePOST
+    private void doBackchannelLogout(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
         LOGGER.fine("Received Backchannel Logout Request");
         String logoutToken = req.getParameter("logout_token");
 
